@@ -17,9 +17,12 @@ var selectableObjects = [];
 // stats
 var stats;
 
+var bShowCar = false;
+
 // begin the scene
 init();
 animate();
+
 
 
 // MAIN FUNCTIONS ==========
@@ -119,7 +122,7 @@ function init() {
 	camera.add(cursor);
 	cursor.position.set(0, 0, -3);
 
-	makeCubeGrid(50, 50, 0xff00ff); // make a demo grid of cubes
+	// makeCubeGrid(50, 50, 0xff00ff); // make a demo grid of cubes
 
 	loadAssets(); // load all other 3D assets
 
@@ -143,23 +146,24 @@ function loadAssets() {
 	var filenames = ["building"] // a list of all the filenames to load as unselectable OBJs
 	for (var i = 0; i < filenames.length; i++) {
 		objMtlLoader.load("3D/" + filenames[i] + ".obj", "3D/" + filenames[i] + ".mtl", function(object, url) { // load the OBJ and companion MTL
-			scene.add(object); // add it to the scene
-			meshes.push(object); // add it to the meshes list
+			// scene.add(object); // add it to the scene
+			// meshes.push(object); // add it to the meshes list
 
-			var filename = (url.split('.')[0]).split('/')[1]
-			object.name = filename // add a property to the new object that is its filename
+			// var filename = (url.split('.')[0]).split('/')[1]
+			// object.name = filename // add a property to the new object that is its filename
 		});
 	}
 
 	// SELECTABLE OBJs ==========
-	var filenames = ["stool"] // a list of all the filenames to load as selectable OBJs
+	var filenames = ["bmw"] // a list of all the filenames to load as selectable OBJs
 	for (var i = 0; i < filenames.length; i++) {
 		objMtlLoader.load("3D/" + filenames[i] + ".obj", "3D/" + filenames[i] + ".mtl", function(object, url) { // load the OBJ and companion MTL
 			scene.add(object); // add it to the scene
 			meshes.push(object); // add it to the meshes list
 
 			selectableObjects.push(object); // add it to the selectable objects list
-
+			object.scale.set(0.1, 0.1, 0.1);
+			object.position.x += 15;
 			var filename = (url.split('.')[0]).split('/')[1]
 			object.name = filename // add a property to the new object that is its filename
 		});
@@ -301,7 +305,10 @@ function update(dt) {
 	camera.updateProjectionMatrix();
 
 	controls.update(dt);
+
+
 }
+
 
 function resize() {
 	var width = container.offsetWidth;
@@ -318,3 +325,17 @@ function render(dt) {
 	effect.render(scene, camera);
 }
 
+
+socket.on('message', function(data) { // log messages to the console
+	console.log(data);
+	if(data == 'down'){
+		for (var i = 0; i < selectableObjects.length; i++){
+			selectableObjects[i].position.x+=15;
+		}
+	}
+	if(data == 'hold'){
+		for (var i = 0; i < selectableObjects.length; i++){
+			selectableObjects[i].position.x-=15;
+		}
+	}
+});
