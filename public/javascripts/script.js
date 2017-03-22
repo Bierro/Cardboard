@@ -17,7 +17,6 @@ var selectableObjects = [];
 // stats
 var stats;
 
-var bShowCar = false;
 
 // begin the scene
 init();
@@ -164,6 +163,7 @@ function loadAssets() {
 			selectableObjects.push(object); // add it to the selectable objects list
 			object.scale.set(0.1, 0.1, 0.1);
 			object.position.x += 15;
+			object.position.z += 30;
 			var filename = (url.split('.')[0]).split('/')[1]
 			object.name = filename // add a property to the new object that is its filename
 		});

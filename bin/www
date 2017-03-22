@@ -89,7 +89,6 @@ function onListening() {
  */
 
 var io = require('../app').io;  
-var sender = io;
 
 io.on('connection', function(socket) {
 
@@ -130,7 +129,7 @@ board.on("ready", function() {
   // "down" the button is pressed
   button.on("down", function() {
     console.log("down");
-    sender.emit('message', 'down');
+    io.emit('message', 'down');
   });
 
   // "hold" the button is pressed for specified time.
@@ -138,13 +137,13 @@ board.on("ready", function() {
   //        set
   button.on("hold", function() {
     console.log("hold");
-    sender.emit('message', 'hold');
+    io.emit('message', 'hold');
   });
 
   // "up" the button is released
   button.on("up", function() {
     console.log("up");
-    sender.emit('message', 'up');
+    io.emit('message', 'up');
   });
 });
 
