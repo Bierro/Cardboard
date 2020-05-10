@@ -30,10 +30,10 @@ function init() {
 
 	// SCENE ==========
 	renderer = new THREE.WebGLRenderer(); // sets up the renderer for the browser
-	
+
 	renderer.setClearColor(0xfff00f); // sets the color of "clear", uncolored pixels
 	renderer.setPixelRatio(window.devicePixelRatio) // sets the pixel ratio to the device's pixel ratio
-	
+
 	element = renderer.domElement; // grabs the DOM from the renderer
 	container = document.getElementById('container'); // grabs the container element from the browser DOM
 	container.appendChild(element); // puts the renderer element in the browser
@@ -43,7 +43,7 @@ function init() {
 
 
 	scene = new THREE.Scene(); // creates a new Scene, the base world for which all 3d elements will be added
-	
+
 	raycaster = new THREE.Raycaster(); // creates a new raycaster for cursor/selection purposes
 
 
@@ -103,7 +103,7 @@ function init() {
 	worldSphere = new THREE.Mesh( // create new background sphere
 		new THREE.SphereGeometry(450, 32, 32), // size it
 		new THREE.MeshBasicMaterial({ // skin it
-			map: THREE.ImageUtils.loadTexture('3D/textures/background.jpg'),
+			map: THREE.ImageUtils.loadTexture('3D/textures/paris.jpg'),
 			side: THREE.DoubleSide
 		})
 	);
@@ -142,14 +142,16 @@ function loadAssets() {
 
 
 	// UNSELECTABLE OBJs ==========
-	var filenames = ["building"] // a list of all the filenames to load as unselectable OBJs
+	var filenames = ["stool"] // a list of all the filenames to load as unselectable OBJs
 	for (var i = 0; i < filenames.length; i++) {
 		objMtlLoader.load("3D/" + filenames[i] + ".obj", "3D/" + filenames[i] + ".mtl", function(object, url) { // load the OBJ and companion MTL
-			// scene.add(object); // add it to the scene
-			// meshes.push(object); // add it to the meshes list
+			 scene.add(object); // add it to the scene
+			 meshes.push(object); // add it to the meshes list
 
-			// var filename = (url.split('.')[0]).split('/')[1]
-			// object.name = filename // add a property to the new object that is its filename
+			 object.position.x -= 15;
+ 			 object.position.z -= 30;
+			 var filename = (url.split('.')[0]).split('/')[1]
+			 object.name = filename // add a property to the new object that is its filename
 		});
 	}
 
@@ -161,9 +163,24 @@ function loadAssets() {
 			meshes.push(object); // add it to the meshes list
 
 			selectableObjects.push(object); // add it to the selectable objects list
+			object.scale.set(1, 1, 1);
+			object.position.x += 5;
+			//object.position.z -= 10;
+			var filename = (url.split('.')[0]).split('/')[1]
+			object.name = filename // add a property to the new object that is its filename
+		});
+	}
+
+	var filenames = ["bmw"] // a list of all the filenames to load as selectable OBJs
+	for (var i = 0; i < filenames.length; i++) {
+		objMtlLoader.load("3D/" + filenames[i] + ".obj", "3D/" + filenames[i] + ".mtl", function(object, url) { // load the OBJ and companion MTL
+			scene.add(object); // add it to the scene
+			meshes.push(object); // add it to the meshes list
+
+			selectableObjects.push(object); // add it to the selectable objects list
 			object.scale.set(0.1, 0.1, 0.1);
-			object.position.x += 15;
-			object.position.z += 30;
+			//object.position.x += 5;
+			object.position.z += 20;
 			var filename = (url.split('.')[0]).split('/')[1]
 			object.name = filename // add a property to the new object that is its filename
 		});
@@ -246,7 +263,7 @@ function rotateObject(object, axis, radians, delayTime) {
 		.to({r: radians}, delayTime)
 		.easing(TWEEN.Easing.Quadratic.InOut)
 		.onUpdate(function() {
-			
+
 			object.rotation.x = object.originalRotation.x + this.r * axis.x;
 			object.rotation.y = object.originalRotation.y + this.r * axis.y;
 			object.rotation.z = object.originalRotation.z + this.r * axis.z;
@@ -272,7 +289,7 @@ function picker() {
 			intersected = intersects[0].object;
 			intersected.currentHex = intersected.material.emissive.getHex();
 			intersected.material.emissive.setHex(0x405060);
-			
+
 		}
 	} else {
 		if (intersected) {
@@ -297,7 +314,7 @@ function animate() {
 }
 
 function update(dt) {
-	
+
 	resize();
 
 	picker();
